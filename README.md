@@ -5,7 +5,7 @@
 [![Total Downloads](https://poser.pugx.org/bittyphp/bitty-middleware/downloads)](https://packagist.org/packages/bittyphp/bitty-middleware)
 [![License](https://poser.pugx.org/bittyphp/bitty-middleware/license)](https://packagist.org/packages/bittyphp/bitty-middleware)
 
-Bitty comes with a middleware implementation that follows the proposed  [PSR-15](https://github.com/php-fig/fig-standards/blob/master/proposed/http-handlers/request-handlers.md) standard.
+Bitty comes with a middleware implementation that follows the original, [**proposed**  PSR-15](https://github.com/php-fig/fig-standards/blob/d76ac29c3ddc21304ccd0cffa712fa77f09254e0/proposed/http-handlers/request-handlers.md) standard. It does not follow the [accepted PSR-15](https://www.php-fig.org/psr/psr-15/), which added return type hinting that breaks compatibility with PHP 5.
 
 ## Installation
 
@@ -15,6 +15,101 @@ It's best to install using [Composer](https://getcomposer.org/).
 $ composer require bittyphp/bitty-middleware
 ```
 
-## TODO:
+## Official Middleware
 
-Finish this.
+Bitty only comes with middleware for the most basic of needs. However, using the `MiddlewareInterface` you can build support for almost anything you can think of.
+
+- [Security](https://github.com/bittyphp/bitty-security)
+- [Error Handler](https://github.com/bittyphp/bitty-error-handler)
+
+## Basic Usage
+
+To use Bitty's middleware outside of Bitty the setup is fairly straightforward. The details of each call will be explained later.
+
+```php
+<?php
+
+use Bitty\Middleware\MiddlewareChain;
+
+// Create a middleware chain.
+$middleware = new MiddlewareChain();
+
+// Optional: Override the default handler.
+$middleware->setDefaultHandler(...);
+
+// Optional: Add your custom middleware.
+$middleware->add(...);
+$middleware->add(...);
+$middleware->add(...);
+
+// Process the request.
+$response = $middleware->handle($request);
+```
+
+### Default Handler
+
+The default handler is what gets called when nothing else processes the request. It must be an instance of `RequestHandlerInterface`. By default, this is just a class that returns a 404 Not Found response. You can override the default handler to be anything you want, but you don't have to.
+
+For more information, see the section on Creating a Request Handler.
+
+```php
+<?php
+
+use Bitty\Middleware\MiddlewareChain;
+use Bitty\Middleware\RequestHandlerInterface;
+
+$middleware = new MiddlewareChain();
+
+/** @var RequestHandlerInterface */
+$defaultHandler = ...;
+
+$middleware->setDefaultHandler($defaultHandler);
+```
+
+### Adding Middleware
+
+All middleware added must implement `Bitty\Middleware\MiddlewareInterface`. The middleware chain is built using a first-in, first-out approach. This means the first middleware you add will be the first middleware that gets called. You can use this to structure your middleware in the order you want.
+
+For more information, see the section on Creating Middleware.
+
+```php
+<?php
+
+use Bitty\Middleware\MiddlewareChain;
+use Bitty\Middleware\MiddlewareInterface;
+
+$middleware = new MiddlewareChain();
+
+/** @var MiddlewareInterface */
+$someMiddleware = ...;
+
+$middleware->add($someMiddleware);
+```
+
+### Processing the Request
+
+The final step is processing the request. The middleware chain will handle any request that implements `Psr\Http\Message\ServerRequestInterface`. This should produce a `Psr\Http\Message\ResponseInterface` which you can then send to the user.
+
+```php
+<?php
+
+use Bitty\Middleware\MiddlewareChain;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+
+$middleware = new MiddlewareChain();
+
+/** @var ServerRequestInterface */
+$request = ...;
+
+/** @var ResponseInterface */
+$response = $middleware->handle($request);
+```
+
+## Creating a Request Handler
+
+TODO: Finish this.
+
+## Creating Middleware
+
+TODO: Finish this.
