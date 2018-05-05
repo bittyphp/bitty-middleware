@@ -2,6 +2,7 @@
 
 namespace Bitty\Middleware;
 
+use Bitty\Middleware\DefaultHandler;
 use Bitty\Middleware\MiddlewareInterface;
 use Bitty\Middleware\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -17,6 +18,14 @@ class MiddlewareChain implements RequestHandlerInterface
      * @var RequestHandlerInterface
      */
     protected $defaultHandler = null;
+
+    /**
+     * Set a very simplistic default handler.
+     */
+    public function __construct()
+    {
+        $this->defaultHandler = new DefaultHandler();
+    }
 
     /**
      * Adds middleware to the chain.
