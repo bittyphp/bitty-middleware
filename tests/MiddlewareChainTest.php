@@ -7,6 +7,7 @@ use Bitty\Middleware\MiddlewareHandler;
 use Bitty\Middleware\MiddlewareInterface;
 use Bitty\Middleware\RequestHandlerInterface;
 use PHPUnit_Framework_TestCase;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class MiddlewareChainTest extends PHPUnit_Framework_TestCase
@@ -36,6 +37,17 @@ class MiddlewareChainTest extends PHPUnit_Framework_TestCase
     }
 
     public function testDefaultHandler()
+    {
+        $request = $this->getMock(ServerRequestInterface::class);
+
+        $actual = $this->fixture->handle($request);
+
+        $this->assertInstanceOf(ResponseInterface::class, $actual);
+        $this->assertEquals('Not Found', $actual->getBody());
+        $this->assertEquals(404, $actual->getStatusCode());
+    }
+
+    public function testCustomDefaultHandler()
     {
         $handler = $this->getMock(RequestHandlerInterface::class);
 
@@ -90,5 +102,19 @@ class MiddlewareChainTest extends PHPUnit_Framework_TestCase
 
         $this->fixture->setDefaultHandler($handler);
         $this->fixture->handle($request);
+    }
+
+    public function testResponse()
+    {
+        $request  = $this->getMock(ServerRequestInterface::class);
+        $response = $this->getMock(ResponseInterface::class);
+
+        $middleware = $this->getMock(MiddlewareInterface::class);
+        $middleware->method('process')->willReturn($response);
+        $this->fixture->add($middleware);
+
+        $actual = $this->fixture->handle($request);
+
+        $this->assertSame($response, $actual);
     }
 }
