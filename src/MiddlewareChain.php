@@ -20,11 +20,15 @@ class MiddlewareChain implements RequestHandlerInterface
     protected $defaultHandler = null;
 
     /**
-     * Set a very simplistic default handler.
+     * @param RequestHandlerInterface|null $defaultHandler
      */
-    public function __construct()
+    public function __construct(RequestHandlerInterface $defaultHandler = null)
     {
-        $this->defaultHandler = new DefaultHandler();
+        $this->defaultHandler = $defaultHandler;
+
+        if (null === $this->defaultHandler) {
+            $this->defaultHandler = new DefaultHandler();
+        }
     }
 
     /**
@@ -50,7 +54,7 @@ class MiddlewareChain implements RequestHandlerInterface
     /**
      * Gets the default request handler.
      *
-     * @return RequestHandlerInterface|null
+     * @return RequestHandlerInterface
      */
     public function getDefaultHandler()
     {
