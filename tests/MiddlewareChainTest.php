@@ -17,18 +17,11 @@ class MiddlewareChainTest extends PHPUnit_Framework_TestCase
      */
     protected $fixture = null;
 
-    /**
-     * @var ContainerInterface
-     */
-    protected $container = null;
-
     protected function setUp()
     {
         parent::setUp();
 
-        $this->container = $this->getMock(ContainerInterface::class);
-
-        $this->fixture = new MiddlewareChain($this->container);
+        $this->fixture = new MiddlewareChain();
     }
 
     public function testInstanceOf()
@@ -52,6 +45,17 @@ class MiddlewareChainTest extends PHPUnit_Framework_TestCase
         $handler = $this->getMock(RequestHandlerInterface::class);
 
         $this->fixture->setDefaultHandler($handler);
+        $actual = $this->fixture->getDefaultHandler();
+
+        $this->assertSame($handler, $actual);
+    }
+
+    public function testCustomDefaultHandlerViaConstructor()
+    {
+        $handler = $this->getMock(RequestHandlerInterface::class);
+
+        $this->fixture = new MiddlewareChain($handler);
+
         $actual = $this->fixture->getDefaultHandler();
 
         $this->assertSame($handler, $actual);
