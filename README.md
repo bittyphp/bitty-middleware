@@ -48,7 +48,7 @@ $response = $middleware->handle($request);
 
 ### Default Handler
 
-The default handler is what gets called when nothing else processes the request. It must be an instance of `RequestHandlerInterface`. By default, this is just a class that returns a 404 Not Found response. You can override the default handler to be anything you want, but you don't have to.
+The default handler is what gets called when nothing else processes the request. It must be an instance of `Bitty\Middleware\RequestHandlerInterface`. By default, this is just a class that returns a 404 Not Found response. You can override the default handler to be anything you want, but you don't have to.
 
 For more information, see the section on Creating a Request Handler.
 
@@ -58,11 +58,24 @@ For more information, see the section on Creating a Request Handler.
 use Bitty\Middleware\MiddlewareChain;
 use Bitty\Middleware\RequestHandlerInterface;
 
-$middleware = new MiddlewareChain();
+/** @var RequestHandlerInterface */
+$defaultHandler = ...;
+
+$middleware = new MiddlewareChain($defaultHandler);
+```
+
+You can also set the default handler after the middleware chain has been constructed.
+
+```php
+<?php
+
+use Bitty\Middleware\MiddlewareChain;
+use Bitty\Middleware\RequestHandlerInterface;
 
 /** @var RequestHandlerInterface */
 $defaultHandler = ...;
 
+$middleware = new MiddlewareChain();
 $middleware->setDefaultHandler($defaultHandler);
 ```
 
@@ -108,8 +121,104 @@ $response = $middleware->handle($request);
 
 ## Creating a Request Handler
 
-TODO: Finish this.
+If you'd like to do more than return a simple 404 Not Found response in the event that no middleware processed a request, you'll have to build a custom request handler. You can use this to return a custom error page, redirect the user to a search page, or display a help page. A request handler can be any class that implements `Bitty\Middleware\RequestHandlerInterface`.
+
+```php
+<?php
+
+use Bitty\Middleware\MiddlewareChain;
+use Bitty\Middleware\RequestHandlerInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+
+class SomeHandler implements RequestHandlerInterface
+{
+    public function handle(ServerRequestInterface $request)
+    {
+        /** @var ResponseInterface */
+        $response = ...;
+
+        return $response;
+    }
+}
+```
+
+Then you simply set your handler as the default handler for the middleware chain.
+
+```php
+<?php
+
+$defaultHandler = new SomeHandler();
+$middleware = new MiddlewareChain($defaultHandler);
+```
 
 ## Creating Middleware
 
-TODO: Finish this.
+There are two basic approaches to creating a middleware component:
+
+  1. Pre-process middleware
+  2. Post-process middleware
+
+### Pre-process Middleware
+
+This middleware style intercepts all requests and has the ability to prevent further middleware from being called. It can also be used to modify the request before passing it along to the next handler. A security layer might use this style of middleware, as it can determine if a user is authorized to perform an action and stop the request from continuing if needed.
+
+```php
+<?php
+
+namespace Bitty\Middleware;
+
+use Bitty\Middleware\MiddlewareInterface;
+use Bitty\Middleware\RequestHandlerInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+
+class SomeMiddleware implements MiddlewareInterface
+{
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler)
+    {
+        if (/* able to process request */) {
+            /** @var ResponseInterface */
+            $response = ...;
+
+            return $response;
+        }
+
+        // You can modify the request before passing it along
+        $newRequest = $request->withHeader('X-Validated', 'true');
+
+        // if unable to handle request, call the next middleware handler
+        return $handler->handle($newRequest);
+    }
+}
+```
+
+### Post-process Middleware
+
+Alternatively, you can use a post-process middleware that allows all other middleware to be called and then it can intercept the response before it's returned to the user. Something like this might be used for an API to always add a JSON content type if the request was to an API resource.
+
+```php
+<?php
+
+namespace Bitty\Middleware;
+
+use Bitty\Middleware\MiddlewareInterface;
+use Bitty\Middleware\RequestHandlerInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+
+class SomeMiddleware implements MiddlewareInterface
+{
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler)
+    {
+        /** @var ResponseInterface */
+        $response = $handler->handle($request);
+
+        if (/* request meets criteria */) {
+            return $response->withHeader('Content-type', 'application/json');
+        }
+
+        return $response;
+    }
+}
+```
