@@ -9,8 +9,13 @@
             "email": "bizurkur@gmail.com"
         }
     ],
+    "config": {
+        "platform": {
+            "php": "5.5.9"
+        }
+    },
     "require": {
-        "php": ">=5.5.0",
+        "php": ">=5.5.9",
         "psr/http-message": "^1.0",
         "bittyphp/bitty-http": "^1.0"
     },
