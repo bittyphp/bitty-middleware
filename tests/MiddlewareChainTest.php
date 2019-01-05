@@ -6,11 +6,11 @@ use Bitty\Middleware\MiddlewareChain;
 use Bitty\Middleware\MiddlewareHandler;
 use Bitty\Middleware\MiddlewareInterface;
 use Bitty\Middleware\RequestHandlerInterface;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class MiddlewareChainTest extends PHPUnit_Framework_TestCase
+class MiddlewareChainTest extends TestCase
 {
     /**
      * @var MiddlewareChain
@@ -31,7 +31,7 @@ class MiddlewareChainTest extends PHPUnit_Framework_TestCase
 
     public function testDefaultHandler()
     {
-        $request = $this->getMock(ServerRequestInterface::class);
+        $request = $this->createMock(ServerRequestInterface::class);
 
         $actual = $this->fixture->handle($request);
 
@@ -42,7 +42,7 @@ class MiddlewareChainTest extends PHPUnit_Framework_TestCase
 
     public function testCustomDefaultHandler()
     {
-        $handler = $this->getMock(RequestHandlerInterface::class);
+        $handler = $this->createMock(RequestHandlerInterface::class);
 
         $this->fixture->setDefaultHandler($handler);
         $actual = $this->fixture->getDefaultHandler();
@@ -52,7 +52,7 @@ class MiddlewareChainTest extends PHPUnit_Framework_TestCase
 
     public function testCustomDefaultHandlerViaConstructor()
     {
-        $handler = $this->getMock(RequestHandlerInterface::class);
+        $handler = $this->createMock(RequestHandlerInterface::class);
 
         $this->fixture = new MiddlewareChain($handler);
 
@@ -63,8 +63,8 @@ class MiddlewareChainTest extends PHPUnit_Framework_TestCase
 
     public function testNoMiddlewareCallsDefaultHandler()
     {
-        $handler = $this->getMock(RequestHandlerInterface::class);
-        $request = $this->getMock(ServerRequestInterface::class);
+        $handler = $this->createMock(RequestHandlerInterface::class);
+        $request = $this->createMock(ServerRequestInterface::class);
 
         $handler->expects($this->once())
             ->method('handle')
@@ -76,10 +76,10 @@ class MiddlewareChainTest extends PHPUnit_Framework_TestCase
 
     public function testOneMiddleware()
     {
-        $handler = $this->getMock(RequestHandlerInterface::class);
-        $request = $this->getMock(ServerRequestInterface::class);
+        $handler = $this->createMock(RequestHandlerInterface::class);
+        $request = $this->createMock(ServerRequestInterface::class);
 
-        $middleware = $this->getMock(MiddlewareInterface::class);
+        $middleware = $this->createMock(MiddlewareInterface::class);
         $this->fixture->add($middleware);
 
         $middleware->expects($this->once())
@@ -92,11 +92,11 @@ class MiddlewareChainTest extends PHPUnit_Framework_TestCase
 
     public function testMultipleMiddlewares()
     {
-        $handler = $this->getMock(RequestHandlerInterface::class);
-        $request = $this->getMock(ServerRequestInterface::class);
+        $handler = $this->createMock(RequestHandlerInterface::class);
+        $request = $this->createMock(ServerRequestInterface::class);
 
-        $middlewareA = $this->getMock(MiddlewareInterface::class);
-        $middlewareB = $this->getMock(MiddlewareInterface::class);
+        $middlewareA = $this->createMock(MiddlewareInterface::class);
+        $middlewareB = $this->createMock(MiddlewareInterface::class);
         $this->fixture->add($middlewareA);
         $this->fixture->add($middlewareB);
 
@@ -110,10 +110,10 @@ class MiddlewareChainTest extends PHPUnit_Framework_TestCase
 
     public function testResponse()
     {
-        $request  = $this->getMock(ServerRequestInterface::class);
-        $response = $this->getMock(ResponseInterface::class);
+        $request  = $this->createMock(ServerRequestInterface::class);
+        $response = $this->createMock(ResponseInterface::class);
 
-        $middleware = $this->getMock(MiddlewareInterface::class);
+        $middleware = $this->createMock(MiddlewareInterface::class);
         $middleware->method('process')->willReturn($response);
         $this->fixture->add($middleware);
 

@@ -4,11 +4,11 @@ namespace Bitty\Tests\Middleware;
 
 use Bitty\Middleware\DefaultHandler;
 use Bitty\Middleware\RequestHandlerInterface;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class DefaultHandlerTest extends PHPUnit_Framework_TestCase
+class DefaultHandlerTest extends TestCase
 {
     /**
      * @var DefaultHandler
@@ -29,7 +29,7 @@ class DefaultHandlerTest extends PHPUnit_Framework_TestCase
 
     public function testHandle()
     {
-        $request = $this->getMock(ServerRequestInterface::class);
+        $request = $this->createMock(ServerRequestInterface::class);
 
         $actual = $this->fixture->handle($request);
 

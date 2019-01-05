@@ -5,11 +5,11 @@ namespace Bitty\Tests\Middleware;
 use Bitty\Middleware\MiddlewareHandler;
 use Bitty\Middleware\MiddlewareInterface;
 use Bitty\Middleware\RequestHandlerInterface;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class MiddlewareHandlerTest extends PHPUnit_Framework_TestCase
+class MiddlewareHandlerTest extends TestCase
 {
     /**
      * @var MiddlewareHandler
@@ -30,8 +30,8 @@ class MiddlewareHandlerTest extends PHPUnit_Framework_TestCase
     {
         parent::setUp();
 
-        $this->middleware = $this->getMock(MiddlewareInterface::class);
-        $this->handler    = $this->getMock(RequestHandlerInterface::class);
+        $this->middleware = $this->createMock(MiddlewareInterface::class);
+        $this->handler    = $this->createMock(RequestHandlerInterface::class);
 
         $this->fixture = new MiddlewareHandler($this->middleware, $this->handler);
     }
@@ -43,7 +43,7 @@ class MiddlewareHandlerTest extends PHPUnit_Framework_TestCase
 
     public function testHandleCallsMiddleware()
     {
-        $request = $this->getMock(ServerRequestInterface::class);
+        $request = $this->createMock(ServerRequestInterface::class);
 
         $this->middleware->expects($this->once())
             ->method('process')
@@ -54,8 +54,8 @@ class MiddlewareHandlerTest extends PHPUnit_Framework_TestCase
 
     public function testMiddlewareResponseReturned()
     {
-        $request  = $this->getMock(ServerRequestInterface::class);
-        $response = $this->getMock(ResponseInterface::class);
+        $request  = $this->createMock(ServerRequestInterface::class);
+        $response = $this->createMock(ResponseInterface::class);
 
         $this->middleware->method('process')->willReturn($response);
 
