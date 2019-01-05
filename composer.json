@@ -9,15 +9,10 @@
             "email": "bizurkur@gmail.com"
         }
     ],
-    "config": {
-        "platform": {
-            "php": "5.5.9"
-        }
-    },
     "require": {
-        "php": ">=5.5.9",
+        "php": ">=7.1.0",
         "psr/http-message": "^1.0",
-        "bittyphp/bitty-http": "^1.0"
+        "bittyphp/bitty-http": "^2.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^4.0",
@@ -33,5 +28,5 @@
             "Bitty\\Tests\\Middleware\\": "tests/"
         }
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "stable"
 }
