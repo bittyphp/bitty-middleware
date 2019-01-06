@@ -3,10 +3,10 @@
 namespace Bitty\Tests\Middleware;
 
 use Bitty\Middleware\DefaultHandler;
-use Bitty\Middleware\RequestHandlerInterface;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 class DefaultHandlerTest extends TestCase
 {

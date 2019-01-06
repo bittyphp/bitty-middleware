@@ -5,7 +5,7 @@
 [![Total Downloads](https://poser.pugx.org/bittyphp/bitty-middleware/downloads)](https://packagist.org/packages/bittyphp/bitty-middleware)
 [![License](https://poser.pugx.org/bittyphp/bitty-middleware/license)](https://packagist.org/packages/bittyphp/bitty-middleware)
 
-Bitty comes with a middleware implementation that follows the original, [**proposed**  PSR-15](https://github.com/php-fig/fig-standards/blob/d76ac29c3ddc21304ccd0cffa712fa77f09254e0/proposed/http-handlers/request-handlers.md) standard. It does not follow the [accepted PSR-15](https://www.php-fig.org/psr/psr-15/), which added return type hinting that breaks compatibility with PHP 5.
+Bitty comes with a [PSR-15](https://www.php-fig.org/psr/psr-15/) middleware implementation.
 
 ## Installation
 
@@ -48,7 +48,7 @@ $response = $middleware->handle($request);
 
 ### Default Handler
 
-The default handler is what gets called when nothing else processes the request. It must be an instance of `Bitty\Middleware\RequestHandlerInterface`. By default, this is just a class that returns a 404 Not Found response. You can override the default handler to be anything you want, but you don't have to.
+The default handler is what gets called when nothing else processes the request. It must be an instance of `Psr\Http\Server\RequestHandlerInterface`. By default, this is just a class that returns a 404 Not Found response. You can override the default handler to be anything you want, but you don't have to.
 
 For more information, see the section on Creating a Request Handler.
 
@@ -56,7 +56,7 @@ For more information, see the section on Creating a Request Handler.
 <?php
 
 use Bitty\Middleware\MiddlewareChain;
-use Bitty\Middleware\RequestHandlerInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 /** @var RequestHandlerInterface */
 $defaultHandler = ...;
@@ -70,7 +70,7 @@ You can also set the default handler after the middleware chain has been constru
 <?php
 
 use Bitty\Middleware\MiddlewareChain;
-use Bitty\Middleware\RequestHandlerInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 /** @var RequestHandlerInterface */
 $defaultHandler = ...;
@@ -81,7 +81,7 @@ $middleware->setDefaultHandler($defaultHandler);
 
 ### Adding Middleware
 
-All middleware added must implement `Bitty\Middleware\MiddlewareInterface`. The middleware chain is built using a first-in, first-out approach. This means the first middleware you add will be the first middleware that gets called. You can use this to structure your middleware in the order you want.
+All middleware added must implement `Psr\Http\Server\MiddlewareInterface`. The middleware chain is built using a first-in, first-out approach. This means the first middleware you add will be the first middleware that gets called. You can use this to structure your middleware in the order you want.
 
 For more information, see the section on Creating Middleware.
 
@@ -89,7 +89,7 @@ For more information, see the section on Creating Middleware.
 <?php
 
 use Bitty\Middleware\MiddlewareChain;
-use Bitty\Middleware\MiddlewareInterface;
+use Psr\Http\Server\MiddlewareInterface;
 
 $middleware = new MiddlewareChain();
 
@@ -121,19 +121,19 @@ $response = $middleware->handle($request);
 
 ## Creating a Request Handler
 
-If you'd like to do more than return a simple 404 Not Found response in the event that no middleware processed a request, you'll have to build a custom request handler. You can use this to return a custom error page, redirect the user to a search page, or display a help page. A request handler can be any class that implements `Bitty\Middleware\RequestHandlerInterface`.
+If you'd like to do more than return a simple 404 Not Found response in the event that no middleware processed a request, you'll have to build a custom request handler. You can use this to return an error page, redirect the user to a search page, or display a help page. A request handler can be any class that implements `Psr\Http\Server\RequestHandlerInterface`.
 
 ```php
 <?php
 
 use Bitty\Middleware\MiddlewareChain;
-use Bitty\Middleware\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 class SomeHandler implements RequestHandlerInterface
 {
-    public function handle(ServerRequestInterface $request)
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
         /** @var ResponseInterface */
         $response = ...;
@@ -168,14 +168,14 @@ This middleware style intercepts all requests and has the ability to prevent fur
 
 namespace Bitty\Middleware;
 
-use Bitty\Middleware\MiddlewareInterface;
-use Bitty\Middleware\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 class SomeMiddleware implements MiddlewareInterface
 {
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         if (/* able to process request */) {
             /** @var ResponseInterface */
@@ -202,14 +202,14 @@ Alternatively, you can use a post-process middleware that allows all other middl
 
 namespace Bitty\Middleware;
 
-use Bitty\Middleware\MiddlewareInterface;
-use Bitty\Middleware\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 class SomeMiddleware implements MiddlewareInterface
 {
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         /** @var ResponseInterface */
         $response = $handler->handle($request);

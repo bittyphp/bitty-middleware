@@ -3,10 +3,10 @@
 namespace Bitty\Middleware;
 
 use Bitty\Middleware\DefaultHandler;
-use Bitty\Middleware\MiddlewareInterface;
-use Bitty\Middleware\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 class MiddlewareChain implements RequestHandlerInterface
 {
