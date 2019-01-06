@@ -5,6 +5,7 @@ namespace Bitty\Middleware;
 use Bitty\Middleware\DefaultHandler;
 use Bitty\Middleware\MiddlewareInterface;
 use Bitty\Middleware\RequestHandlerInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class MiddlewareChain implements RequestHandlerInterface
@@ -24,11 +25,11 @@ class MiddlewareChain implements RequestHandlerInterface
      */
     public function __construct(RequestHandlerInterface $defaultHandler = null)
     {
-        $this->defaultHandler = $defaultHandler;
-
-        if (null === $this->defaultHandler) {
-            $this->defaultHandler = new DefaultHandler();
+        if (null === $defaultHandler) {
+            $defaultHandler = new DefaultHandler();
         }
+
+        $this->defaultHandler = $defaultHandler;
     }
 
     /**
@@ -36,7 +37,7 @@ class MiddlewareChain implements RequestHandlerInterface
      *
      * @param MiddlewareInterface $middleware
      */
-    public function add(MiddlewareInterface $middleware)
+    public function add(MiddlewareInterface $middleware): void
     {
         $this->chain[] = $middleware;
     }
@@ -46,7 +47,7 @@ class MiddlewareChain implements RequestHandlerInterface
      *
      * @param RequestHandlerInterface $defaultHandler
      */
-    public function setDefaultHandler(RequestHandlerInterface $defaultHandler)
+    public function setDefaultHandler(RequestHandlerInterface $defaultHandler): void
     {
         $this->defaultHandler = $defaultHandler;
     }
@@ -56,7 +57,7 @@ class MiddlewareChain implements RequestHandlerInterface
      *
      * @return RequestHandlerInterface
      */
-    public function getDefaultHandler()
+    public function getDefaultHandler(): RequestHandlerInterface
     {
         return $this->defaultHandler;
     }
@@ -64,7 +65,7 @@ class MiddlewareChain implements RequestHandlerInterface
     /**
      * {@inheritDoc}
      */
-    public function handle(ServerRequestInterface $request)
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $chain = $this->buildChain();
 
@@ -76,7 +77,7 @@ class MiddlewareChain implements RequestHandlerInterface
      *
      * @return RequestHandlerInterface
      */
-    protected function buildChain()
+    protected function buildChain(): RequestHandlerInterface
     {
         $chain = $this->defaultHandler;
 

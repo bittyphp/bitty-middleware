@@ -17,40 +17,40 @@ class MiddlewareChainTest extends TestCase
      */
     protected $fixture = null;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
         $this->fixture = new MiddlewareChain();
     }
 
-    public function testInstanceOf()
+    public function testInstanceOf(): void
     {
-        $this->assertInstanceOf(RequestHandlerInterface::class, $this->fixture);
+        self::assertInstanceOf(RequestHandlerInterface::class, $this->fixture);
     }
 
-    public function testDefaultHandler()
+    public function testDefaultHandler(): void
     {
         $request = $this->createMock(ServerRequestInterface::class);
 
         $actual = $this->fixture->handle($request);
 
-        $this->assertInstanceOf(ResponseInterface::class, $actual);
-        $this->assertEquals('Not Found', $actual->getBody());
-        $this->assertEquals(404, $actual->getStatusCode());
+        self::assertInstanceOf(ResponseInterface::class, $actual);
+        self::assertEquals('Not Found', $actual->getBody());
+        self::assertEquals(404, $actual->getStatusCode());
     }
 
-    public function testCustomDefaultHandler()
+    public function testCustomDefaultHandler(): void
     {
         $handler = $this->createMock(RequestHandlerInterface::class);
 
         $this->fixture->setDefaultHandler($handler);
         $actual = $this->fixture->getDefaultHandler();
 
-        $this->assertSame($handler, $actual);
+        self::assertSame($handler, $actual);
     }
 
-    public function testCustomDefaultHandlerViaConstructor()
+    public function testCustomDefaultHandlerViaConstructor(): void
     {
         $handler = $this->createMock(RequestHandlerInterface::class);
 
@@ -58,15 +58,15 @@ class MiddlewareChainTest extends TestCase
 
         $actual = $this->fixture->getDefaultHandler();
 
-        $this->assertSame($handler, $actual);
+        self::assertSame($handler, $actual);
     }
 
-    public function testNoMiddlewareCallsDefaultHandler()
+    public function testNoMiddlewareCallsDefaultHandler(): void
     {
         $handler = $this->createMock(RequestHandlerInterface::class);
         $request = $this->createMock(ServerRequestInterface::class);
 
-        $handler->expects($this->once())
+        $handler->expects(self::once())
             ->method('handle')
             ->with($request);
 
@@ -74,7 +74,7 @@ class MiddlewareChainTest extends TestCase
         $this->fixture->handle($request);
     }
 
-    public function testOneMiddleware()
+    public function testOneMiddleware(): void
     {
         $handler = $this->createMock(RequestHandlerInterface::class);
         $request = $this->createMock(ServerRequestInterface::class);
@@ -82,7 +82,7 @@ class MiddlewareChainTest extends TestCase
         $middleware = $this->createMock(MiddlewareInterface::class);
         $this->fixture->add($middleware);
 
-        $middleware->expects($this->once())
+        $middleware->expects(self::once())
             ->method('process')
             ->with($request, $handler);
 
@@ -90,7 +90,7 @@ class MiddlewareChainTest extends TestCase
         $this->fixture->handle($request);
     }
 
-    public function testMultipleMiddlewares()
+    public function testMultipleMiddlewares(): void
     {
         $handler = $this->createMock(RequestHandlerInterface::class);
         $request = $this->createMock(ServerRequestInterface::class);
@@ -100,15 +100,15 @@ class MiddlewareChainTest extends TestCase
         $this->fixture->add($middlewareA);
         $this->fixture->add($middlewareB);
 
-        $middlewareA->expects($this->once())
+        $middlewareA->expects(self::once())
             ->method('process')
-            ->with($request, $this->isInstanceOf(MiddlewareHandler::class));
+            ->with($request, self::isInstanceOf(MiddlewareHandler::class));
 
         $this->fixture->setDefaultHandler($handler);
         $this->fixture->handle($request);
     }
 
-    public function testResponse()
+    public function testResponse(): void
     {
         $request  = $this->createMock(ServerRequestInterface::class);
         $response = $this->createMock(ResponseInterface::class);
@@ -119,6 +119,6 @@ class MiddlewareChainTest extends TestCase
 
         $actual = $this->fixture->handle($request);
 
-        $this->assertSame($response, $actual);
+        self::assertSame($response, $actual);
     }
 }

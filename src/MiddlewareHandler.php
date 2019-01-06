@@ -4,6 +4,7 @@ namespace Bitty\Middleware;
 
 use Bitty\Middleware\MiddlewareInterface;
 use Bitty\Middleware\RequestHandlerInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class MiddlewareHandler implements RequestHandlerInterface
@@ -33,7 +34,7 @@ class MiddlewareHandler implements RequestHandlerInterface
     /**
      * {@inheritDoc}
      */
-    public function handle(ServerRequestInterface $request)
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
         return $this->middleware->process($request, $this->handler);
     }

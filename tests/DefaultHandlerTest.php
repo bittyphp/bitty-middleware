@@ -15,26 +15,26 @@ class DefaultHandlerTest extends TestCase
      */
     protected $fixture = null;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
         $this->fixture = new DefaultHandler();
     }
 
-    public function testInstanceOf()
+    public function testInstanceOf(): void
     {
-        $this->assertInstanceOf(RequestHandlerInterface::class, $this->fixture);
+        self::assertInstanceOf(RequestHandlerInterface::class, $this->fixture);
     }
 
-    public function testHandle()
+    public function testHandle(): void
     {
         $request = $this->createMock(ServerRequestInterface::class);
 
         $actual = $this->fixture->handle($request);
 
-        $this->assertInstanceOf(ResponseInterface::class, $actual);
-        $this->assertEquals('Not Found', $actual->getBody());
-        $this->assertEquals(404, $actual->getStatusCode());
+        self::assertInstanceOf(ResponseInterface::class, $actual);
+        self::assertEquals('Not Found', $actual->getBody());
+        self::assertEquals(404, $actual->getStatusCode());
     }
 }

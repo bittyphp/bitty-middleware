@@ -5,6 +5,7 @@ namespace Bitty\Tests\Middleware;
 use Bitty\Middleware\MiddlewareHandler;
 use Bitty\Middleware\MiddlewareInterface;
 use Bitty\Middleware\RequestHandlerInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -17,16 +18,16 @@ class MiddlewareHandlerTest extends TestCase
     protected $fixture = null;
 
     /**
-     * @var MiddlewareInterface
+     * @var MiddlewareInterface|MockObject
      */
     protected $middleware = null;
 
     /**
-     * @var RequestHandlerInterface
+     * @var RequestHandlerInterface|MockObject
      */
     protected $handler = null;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -36,23 +37,23 @@ class MiddlewareHandlerTest extends TestCase
         $this->fixture = new MiddlewareHandler($this->middleware, $this->handler);
     }
 
-    public function testInstanceOf()
+    public function testInstanceOf(): void
     {
-        $this->assertInstanceOf(RequestHandlerInterface::class, $this->fixture);
+        self::assertInstanceOf(RequestHandlerInterface::class, $this->fixture);
     }
 
-    public function testHandleCallsMiddleware()
+    public function testHandleCallsMiddleware(): void
     {
         $request = $this->createMock(ServerRequestInterface::class);
 
-        $this->middleware->expects($this->once())
+        $this->middleware->expects(self::once())
             ->method('process')
             ->with($request, $this->handler);
 
         $this->fixture->handle($request);
     }
 
-    public function testMiddlewareResponseReturned()
+    public function testMiddlewareResponseReturned(): void
     {
         $request  = $this->createMock(ServerRequestInterface::class);
         $response = $this->createMock(ResponseInterface::class);
@@ -61,6 +62,6 @@ class MiddlewareHandlerTest extends TestCase
 
         $actual = $this->fixture->handle($request);
 
-        $this->assertSame($response, $actual);
+        self::assertSame($response, $actual);
     }
 }
