@@ -1,2 +1,4 @@
-/vendor/
+vendor/
+phpcs.xml
 phpunit.xml
+phpstan.neon

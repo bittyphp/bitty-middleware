@@ -3,38 +3,38 @@
 namespace Bitty\Tests\Middleware;
 
 use Bitty\Middleware\DefaultHandler;
-use Bitty\Middleware\RequestHandlerInterface;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
-class DefaultHandlerTest extends PHPUnit_Framework_TestCase
+class DefaultHandlerTest extends TestCase
 {
     /**
      * @var DefaultHandler
      */
     protected $fixture = null;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
         $this->fixture = new DefaultHandler();
     }
 
-    public function testInstanceOf()
+    public function testInstanceOf(): void
     {
-        $this->assertInstanceOf(RequestHandlerInterface::class, $this->fixture);
+        self::assertInstanceOf(RequestHandlerInterface::class, $this->fixture);
     }
 
-    public function testHandle()
+    public function testHandle(): void
     {
-        $request = $this->getMock(ServerRequestInterface::class);
+        $request = $this->createMock(ServerRequestInterface::class);
 
         $actual = $this->fixture->handle($request);
 
-        $this->assertInstanceOf(ResponseInterface::class, $actual);
-        $this->assertEquals('Not Found', $actual->getBody());
-        $this->assertEquals(404, $actual->getStatusCode());
+        self::assertInstanceOf(ResponseInterface::class, $actual);
+        self::assertEquals('Not Found', $actual->getBody());
+        self::assertEquals(404, $actual->getStatusCode());
     }
 }

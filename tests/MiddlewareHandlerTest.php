@@ -3,13 +3,14 @@
 namespace Bitty\Tests\Middleware;
 
 use Bitty\Middleware\MiddlewareHandler;
-use Bitty\Middleware\MiddlewareInterface;
-use Bitty\Middleware\RequestHandlerInterface;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
-class MiddlewareHandlerTest extends PHPUnit_Framework_TestCase
+class MiddlewareHandlerTest extends TestCase
 {
     /**
      * @var MiddlewareHandler
@@ -17,50 +18,50 @@ class MiddlewareHandlerTest extends PHPUnit_Framework_TestCase
     protected $fixture = null;
 
     /**
-     * @var MiddlewareInterface
+     * @var MiddlewareInterface|MockObject
      */
     protected $middleware = null;
 
     /**
-     * @var RequestHandlerInterface
+     * @var RequestHandlerInterface|MockObject
      */
     protected $handler = null;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
-        $this->middleware = $this->getMock(MiddlewareInterface::class);
-        $this->handler    = $this->getMock(RequestHandlerInterface::class);
+        $this->middleware = $this->createMock(MiddlewareInterface::class);
+        $this->handler    = $this->createMock(RequestHandlerInterface::class);
 
         $this->fixture = new MiddlewareHandler($this->middleware, $this->handler);
     }
 
-    public function testInstanceOf()
+    public function testInstanceOf(): void
     {
-        $this->assertInstanceOf(RequestHandlerInterface::class, $this->fixture);
+        self::assertInstanceOf(RequestHandlerInterface::class, $this->fixture);
     }
 
-    public function testHandleCallsMiddleware()
+    public function testHandleCallsMiddleware(): void
     {
-        $request = $this->getMock(ServerRequestInterface::class);
+        $request = $this->createMock(ServerRequestInterface::class);
 
-        $this->middleware->expects($this->once())
+        $this->middleware->expects(self::once())
             ->method('process')
             ->with($request, $this->handler);
 
         $this->fixture->handle($request);
     }
 
-    public function testMiddlewareResponseReturned()
+    public function testMiddlewareResponseReturned(): void
     {
-        $request  = $this->getMock(ServerRequestInterface::class);
-        $response = $this->getMock(ResponseInterface::class);
+        $request  = $this->createMock(ServerRequestInterface::class);
+        $response = $this->createMock(ResponseInterface::class);
 
         $this->middleware->method('process')->willReturn($response);
 
         $actual = $this->fixture->handle($request);
 
-        $this->assertSame($response, $actual);
+        self::assertSame($response, $actual);
     }
 }

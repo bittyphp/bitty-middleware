@@ -4,69 +4,69 @@ namespace Bitty\Tests\Middleware;
 
 use Bitty\Middleware\MiddlewareChain;
 use Bitty\Middleware\MiddlewareHandler;
-use Bitty\Middleware\MiddlewareInterface;
-use Bitty\Middleware\RequestHandlerInterface;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
-class MiddlewareChainTest extends PHPUnit_Framework_TestCase
+class MiddlewareChainTest extends TestCase
 {
     /**
      * @var MiddlewareChain
      */
     protected $fixture = null;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
         $this->fixture = new MiddlewareChain();
     }
 
-    public function testInstanceOf()
+    public function testInstanceOf(): void
     {
-        $this->assertInstanceOf(RequestHandlerInterface::class, $this->fixture);
+        self::assertInstanceOf(RequestHandlerInterface::class, $this->fixture);
     }
 
-    public function testDefaultHandler()
+    public function testDefaultHandler(): void
     {
-        $request = $this->getMock(ServerRequestInterface::class);
+        $request = $this->createMock(ServerRequestInterface::class);
 
         $actual = $this->fixture->handle($request);
 
-        $this->assertInstanceOf(ResponseInterface::class, $actual);
-        $this->assertEquals('Not Found', $actual->getBody());
-        $this->assertEquals(404, $actual->getStatusCode());
+        self::assertInstanceOf(ResponseInterface::class, $actual);
+        self::assertEquals('Not Found', $actual->getBody());
+        self::assertEquals(404, $actual->getStatusCode());
     }
 
-    public function testCustomDefaultHandler()
+    public function testCustomDefaultHandler(): void
     {
-        $handler = $this->getMock(RequestHandlerInterface::class);
+        $handler = $this->createMock(RequestHandlerInterface::class);
 
         $this->fixture->setDefaultHandler($handler);
         $actual = $this->fixture->getDefaultHandler();
 
-        $this->assertSame($handler, $actual);
+        self::assertSame($handler, $actual);
     }
 
-    public function testCustomDefaultHandlerViaConstructor()
+    public function testCustomDefaultHandlerViaConstructor(): void
     {
-        $handler = $this->getMock(RequestHandlerInterface::class);
+        $handler = $this->createMock(RequestHandlerInterface::class);
 
         $this->fixture = new MiddlewareChain($handler);
 
         $actual = $this->fixture->getDefaultHandler();
 
-        $this->assertSame($handler, $actual);
+        self::assertSame($handler, $actual);
     }
 
-    public function testNoMiddlewareCallsDefaultHandler()
+    public function testNoMiddlewareCallsDefaultHandler(): void
     {
-        $handler = $this->getMock(RequestHandlerInterface::class);
-        $request = $this->getMock(ServerRequestInterface::class);
+        $handler = $this->createMock(RequestHandlerInterface::class);
+        $request = $this->createMock(ServerRequestInterface::class);
 
-        $handler->expects($this->once())
+        $handler->expects(self::once())
             ->method('handle')
             ->with($request);
 
@@ -74,15 +74,15 @@ class MiddlewareChainTest extends PHPUnit_Framework_TestCase
         $this->fixture->handle($request);
     }
 
-    public function testOneMiddleware()
+    public function testOneMiddleware(): void
     {
-        $handler = $this->getMock(RequestHandlerInterface::class);
-        $request = $this->getMock(ServerRequestInterface::class);
+        $handler = $this->createMock(RequestHandlerInterface::class);
+        $request = $this->createMock(ServerRequestInterface::class);
 
-        $middleware = $this->getMock(MiddlewareInterface::class);
+        $middleware = $this->createMock(MiddlewareInterface::class);
         $this->fixture->add($middleware);
 
-        $middleware->expects($this->once())
+        $middleware->expects(self::once())
             ->method('process')
             ->with($request, $handler);
 
@@ -90,35 +90,35 @@ class MiddlewareChainTest extends PHPUnit_Framework_TestCase
         $this->fixture->handle($request);
     }
 
-    public function testMultipleMiddlewares()
+    public function testMultipleMiddlewares(): void
     {
-        $handler = $this->getMock(RequestHandlerInterface::class);
-        $request = $this->getMock(ServerRequestInterface::class);
+        $handler = $this->createMock(RequestHandlerInterface::class);
+        $request = $this->createMock(ServerRequestInterface::class);
 
-        $middlewareA = $this->getMock(MiddlewareInterface::class);
-        $middlewareB = $this->getMock(MiddlewareInterface::class);
+        $middlewareA = $this->createMock(MiddlewareInterface::class);
+        $middlewareB = $this->createMock(MiddlewareInterface::class);
         $this->fixture->add($middlewareA);
         $this->fixture->add($middlewareB);
 
-        $middlewareA->expects($this->once())
+        $middlewareA->expects(self::once())
             ->method('process')
-            ->with($request, $this->isInstanceOf(MiddlewareHandler::class));
+            ->with($request, self::isInstanceOf(MiddlewareHandler::class));
 
         $this->fixture->setDefaultHandler($handler);
         $this->fixture->handle($request);
     }
 
-    public function testResponse()
+    public function testResponse(): void
     {
-        $request  = $this->getMock(ServerRequestInterface::class);
-        $response = $this->getMock(ResponseInterface::class);
+        $request  = $this->createMock(ServerRequestInterface::class);
+        $response = $this->createMock(ResponseInterface::class);
 
-        $middleware = $this->getMock(MiddlewareInterface::class);
+        $middleware = $this->createMock(MiddlewareInterface::class);
         $middleware->method('process')->willReturn($response);
         $this->fixture->add($middleware);
 
         $actual = $this->fixture->handle($request);
 
-        $this->assertSame($response, $actual);
+        self::assertSame($response, $actual);
     }
 }
