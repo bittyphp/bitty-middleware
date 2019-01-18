@@ -126,7 +126,6 @@ If you'd like to do more than return a simple 404 Not Found response in the even
 ```php
 <?php
 
-use Bitty\Middleware\MiddlewareChain;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -166,8 +165,6 @@ This middleware style intercepts all requests and has the ability to prevent fur
 ```php
 <?php
 
-namespace Bitty\Middleware;
-
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -199,8 +196,6 @@ Alternatively, you can use a post-process middleware that allows all other middl
 
 ```php
 <?php
-
-namespace Bitty\Middleware;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
