@@ -1,9 +1,9 @@
 # Bitty Middleware
 
-[![Build Status](https://travis-ci.org/bittyphp/bitty-middleware.svg?branch=master)](https://travis-ci.org/bittyphp/bitty-middleware)
-[![Codacy Badge](https://api.codacy.com/project/badge/Coverage/c4439e8d27304c6f96caaec42d252650)](https://www.codacy.com/app/bittyphp/bitty-middleware)
-[![Total Downloads](https://poser.pugx.org/bittyphp/bitty-middleware/downloads)](https://packagist.org/packages/bittyphp/bitty-middleware)
-[![License](https://poser.pugx.org/bittyphp/bitty-middleware/license)](https://packagist.org/packages/bittyphp/bitty-middleware)
+[![Build Status](https://travis-ci.org/bittyphp/middleware.svg?branch=master)](https://travis-ci.org/bittyphp/middleware)
+[![Codacy Badge](https://api.codacy.com/project/badge/Coverage/c4439e8d27304c6f96caaec42d252650)](https://www.codacy.com/app/bittyphp/middleware)
+[![Total Downloads](https://poser.pugx.org/bittyphp/middleware/downloads)](https://packagist.org/packages/bittyphp/middleware)
+[![License](https://poser.pugx.org/bittyphp/middleware/license)](https://packagist.org/packages/bittyphp/middleware)
 
 Bitty comes with a [PSR-15](https://www.php-fig.org/psr/psr-15/) middleware implementation.
 
@@ -12,15 +12,16 @@ Bitty comes with a [PSR-15](https://www.php-fig.org/psr/psr-15/) middleware impl
 It's best to install using [Composer](https://getcomposer.org/).
 
 ```sh
-$ composer require bittyphp/bitty-middleware
+$ composer require bittyphp/middleware
 ```
 
 ## Official Middleware
 
 Bitty only comes with middleware for the most basic of needs. However, using the `MiddlewareInterface` you can build support for almost anything you can think of.
 
-- [Security](https://github.com/bittyphp/bitty-security)
-- [Error Handler](https://github.com/bittyphp/bitty-error-handler)
+- [Router](https://github.com/bittyphp/router)
+- [Security](https://github.com/bittyphp/security) (Work in Progress)
+- [Error Handler](https://github.com/bittyphp/error-handler) (Work in Progress)
 
 ## Basic Usage
 

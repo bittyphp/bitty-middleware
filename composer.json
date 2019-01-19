@@ -1,5 +1,5 @@
 {
-    "name": "bittyphp/bitty-middleware",
+    "name": "bittyphp/middleware",
     "type": "library",
     "description": "PSR-15 HTTP Middleware implementation.",
     "license": "MIT",
@@ -11,7 +11,7 @@
     ],
     "require": {
         "php": ">=7.1.0",
-        "bittyphp/bitty-http": "^2.0",
+        "bittyphp/http": "^2.0",
         "psr/http-message": "^1.0",
         "psr/http-server-handler": "^1.0",
         "psr/http-server-middleware": "^1.0"
