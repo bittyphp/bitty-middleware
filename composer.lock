@@ -1,7 +1,7 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
     "content-hash": "ce6ee4029f60882da87f846a6933ee5d",
@@ -56,16 +56,16 @@
         },
         {
             "name": "bittyphp/http",
-            "version": "v2.0.3",
+            "version": "v2.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bittyphp/http.git",
-                "reference": "be2faba3bcdea28db58d916be9aebc19454456d5"
+                "reference": "2d82de1ce7d93b96718876fd0ef720ec9dbc2147"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bittyphp/http/zipball/be2faba3bcdea28db58d916be9aebc19454456d5",
-                "reference": "be2faba3bcdea28db58d916be9aebc19454456d5",
+                "url": "https://api.github.com/repos/bittyphp/http/zipball/2d82de1ce7d93b96718876fd0ef720ec9dbc2147",
+                "reference": "2d82de1ce7d93b96718876fd0ef720ec9dbc2147",
                 "shasum": ""
             },
             "require": {
@@ -73,6 +73,10 @@
                 "php": ">=7.1.0",
                 "psr/http-factory": "^1.0",
                 "psr/http-message": "^1.0"
+            },
+            "provide": {
+                "psr/http-factory-implementation": "1.0",
+                "psr/http-message-implementation": "1.0"
             },
             "require-dev": {
                 "codacy/coverage": "^1.4",
@@ -103,7 +107,7 @@
                 }
             ],
             "description": "PSR-7 and PSR-17 HTTP implementation.",
-            "time": "2019-01-19T21:12:55+00:00"
+            "time": "2019-01-19T23:05:05+00:00"
         },
         {
             "name": "psr/http-factory",
