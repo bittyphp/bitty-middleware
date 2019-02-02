@@ -15,7 +15,7 @@ class MiddlewareChainTest extends TestCase
     /**
      * @var MiddlewareChain
      */
-    protected $fixture = null;
+    private $fixture = null;
 
     protected function setUp(): void
     {

@@ -15,17 +15,17 @@ class MiddlewareHandlerTest extends TestCase
     /**
      * @var MiddlewareHandler
      */
-    protected $fixture = null;
+    private $fixture = null;
 
     /**
      * @var MiddlewareInterface|MockObject
      */
-    protected $middleware = null;
+    private $middleware = null;
 
     /**
      * @var RequestHandlerInterface|MockObject
      */
-    protected $handler = null;
+    private $handler = null;
 
     protected function setUp(): void
     {

@@ -13,7 +13,7 @@ class DefaultHandlerTest extends TestCase
     /**
      * @var DefaultHandler
      */
-    protected $fixture = null;
+    private $fixture = null;
 
     protected function setUp(): void
     {

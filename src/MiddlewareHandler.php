@@ -12,12 +12,12 @@ class MiddlewareHandler implements RequestHandlerInterface
     /**
      * @var MiddlewareInterface
      */
-    protected $middleware = null;
+    private $middleware = null;
 
     /**
      * @var RequestHandlerInterface
      */
-    protected $handler = null;
+    private $handler = null;
 
     /**
      * @param MiddlewareInterface $middleware
