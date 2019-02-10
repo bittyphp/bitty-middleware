@@ -23,9 +23,9 @@ class MiddlewareChain implements RequestHandlerInterface
     /**
      * @param RequestHandlerInterface|null $defaultHandler
      */
-    public function __construct(RequestHandlerInterface $defaultHandler = null)
+    public function __construct(?RequestHandlerInterface $defaultHandler = null)
     {
-        if (null === $defaultHandler) {
+        if ($defaultHandler === null) {
             $defaultHandler = new DefaultHandler();
         }
 
